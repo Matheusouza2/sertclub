@@ -7,6 +7,7 @@ class Evento{
     private $atracoes;
     private $data;
     private $hora;
+    private $local;
 
     public function __construct()
     {
@@ -55,6 +56,16 @@ class Evento{
     public function setHora($hora)
     {
         $this->hora = $hora;
+    }
+
+    public function getLocal()
+    {
+        return $this->local;
+    }
+
+    public function setLocal($local)
+    {
+        $this->local = $local;
     }
       
 }

@@ -13,13 +13,14 @@ class EventosDao{
     {
         $conexao = Conexao::getInstance();
 
-        $sql = "INSERT INTO eventos(nome, data, hora, atracoes) VALUES (?,?,?,?)";
+        $sql = "INSERT INTO eventos(nome, data, hora, atracoes, local) VALUES (?,?,?,?,?)";
 
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(1, $evento->getNome());
         $stmt->bindParam(2, $evento->getData());
         $stmt->bindParam(3, $evento->getHora());
         $stmt->bindParam(4, $evento->getAtracoes());
+        $stmt->bindParam(5, $evento->getLocal());
 
         $stmt->execute();
 
@@ -29,7 +30,7 @@ class EventosDao{
     public static function listar(){
         $conexao = Conexao::getInstance();
 
-        $sql = "SELECT eventos.*, count(lotes.id) FROM eventos INNER JOIN lotes ON lotes.evento = eventos.id GROUP BY lotes.id;";
+        $sql = "SELECT eventos.*, count(eventos.id) as qtd_lotes FROM eventos INNER JOIN lotes on lotes.evento = eventos.id GROUP BY eventos.id;";
 
         $result = $conexao->query($sql);
         
@@ -39,8 +40,8 @@ class EventosDao{
     public function listAll()
     {
         $conexao = Conexao::getInstance();
-
-        $sql = "SELECT * FROM eventos";
+        $hoje = date('Y/m/d');
+        $sql = "SELECT * FROM eventos WHERE data > '".$hoje."'";
 
         $result = $conexao->query($sql);
         

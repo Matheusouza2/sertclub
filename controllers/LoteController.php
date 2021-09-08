@@ -5,6 +5,8 @@ require_once __DIR__."\..\models\Lote.php";
 
 if(isset($_POST['cadastrar'])){
     LoteController::cadastrar();
+}else if(isset($_GET['loteId'])){
+    LoteController::encerrarLote($_GET['loteId']);
 }
 
 class LoteController{
@@ -24,10 +26,26 @@ class LoteController{
         $loteDao->cadastrar($lote);
     }
 
-    public function emitirSenhas()
+    public function listarTodos()
     {
         $loteDao = new LotesDao();
 
-        return $loteDao->emitirSenhas();
+        return $loteDao->listAll();
+    }
+
+    public function emitirSenhas($loteId)
+    {
+        $loteDao = new LotesDao();
+
+        return $loteDao->emitirSenhas($loteId);
+    }
+
+    public function encerrarLote($loteId)
+    {
+        $loteDao = new LotesDao();
+
+        $loteDao->baixarLote($loteId);
+
+        echo "Lote Encerrado com sucesso !";
     }
 }

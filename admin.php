@@ -2,6 +2,7 @@
 <html>
 <?php
 require 'controllers/EventoController.php';
+session_start();
 ?>
 <head>
   <meta charset="utf-8">
@@ -54,7 +55,7 @@ require 'controllers/EventoController.php';
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
                   <div class="media-body  ml-2  d-none d-lg-block">
-                    <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+                    <span class="mb-0 text-sm  font-weight-bold"><?php echo $_SESSION['user'][0][1] ?></span>
                   </div>
                 </div>
               </a>
@@ -98,10 +99,10 @@ require 'controllers/EventoController.php';
                   foreach($eventos->listar() as $evento){
                 ?>
                 <tr>
-                  <td><?=$evento[3]?></td>
-                  <td><?=date('d/m/Y', strtotime($evento[1]))?></td>
-                  <td><?=$evento[2]?></td>
-                  <td><?=$evento[5]?></td>
+                  <td><?=$evento[1]?></td>
+                  <td><?=date('d/m/Y', strtotime($evento[3]))?></td>
+                  <td><?=$evento[4]?></td>
+                  <td><?=$evento[6]?></td>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -143,6 +144,11 @@ require 'controllers/EventoController.php';
             <div class="col-12 form-group">
               <label for="">Atrações</label><br>
               <textarea class="form-control" name="atracoes" id="" cols="30" rows="3" required></textarea>
+            </div>
+            
+            <div class="col-12 form-group">
+              <label for="">Local:</label><br>
+              <input type="text" name="local" class="form-control" id="" required>
             </div>
           </div>
         </div>

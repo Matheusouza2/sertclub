@@ -15,12 +15,15 @@ class EventoController{
     }
 
     public function cadastrar(){
+        $atracoes = str_replace(array("\n", "\r"), array(" | ", ""), $_POST['atracoes']);
+
         $evento = new Evento();
         $evento->setNome($_POST['nome']);
-        $evento->setAtracoes($_POST['atracoes']);
+        $evento->setAtracoes($atracoes);
         $evento->setHora($_POST['hora']);
         $evento->setData($_POST['data']);
-
+        $evento->setLocal($_POST['local']);
+        
         $eventoDao = new EventosDao();
         $eventoDao->cadastrar($evento);
     }

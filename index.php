@@ -1,4 +1,9 @@
 <html lang="pt-br">
+<?php session_start();
+if(isset($_SESSION['user'])){
+  header("location: admin.php");
+}
+?>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,8 +22,8 @@
           alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form>
-            
+        <form action="controllers/UserController.php" method="POST">
+            <input type="hidden" name="login" value="true">
             <div class="form-outline mb-4">
                 <label class="form-label" for="usuario">Usuário</label>
                 <input type="text" id="usuario" name="usuario" class="form-control form-control-lg"
@@ -32,7 +37,7 @@
             </div>
 
             <div class="text-center text-lg-start mt-4 pt-2">
-                <button type="button" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Entrar</button>
+                <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Entrar</button>
             </div>
 
         </form>
@@ -48,5 +53,17 @@
   </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php
+    if(isset($_SESSION['msg'])){
+  ?>
+  <script>
+    Swal.fire({
+      "title": "<?=$_SESSION['msg']['title']?>",
+      "text": "<?=$_SESSION['msg']['text']?>",
+      "icon": "<?=$_SESSION['msg']['icon']?>",
+    });
+  </script>
+  <?php unset($_SESSION['msg']); } ?>
 </body>
 </html>

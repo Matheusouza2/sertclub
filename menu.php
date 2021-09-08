@@ -19,19 +19,25 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="examples/profile.html">
+              <a class="nav-link" href="gerenciarLotes.php">
                 <i class="fad fa-box text-orange"></i>
                 <span class="nav-link-text">Gerenciar Lotes</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="examples/tables.html">
+              <a href="portaria.php" class="nav-link">
+                <i class="fad fa-scanner text-blue"></i>
+                <span class="nav-link-text">Portaria</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="usuarios.php">
                 <i class="fad fa-user text-purple"></i>
                 <span class="nav-link-text">Usuários</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="examples/tables.html">
+              <a class="nav-link" href="controllers/UserController.php?logout=true">
                 <i class="fad fa-sign-out text-danger"></i>
                 <span class="nav-link-text">Sair</span>
               </a>

@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
 <?php
-require 'controllers/EventoController.php';
-session_start();
+require 'controllers/LoteController.php';
 ?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
   <meta name="author" content="Creative Tim">
-  <title>Emissão de Senhas</title>
+  <title>Gerenciar Lotes</title>
   <!-- Favicon -->
   <link rel="icon" href="assets/img/icon.ico" type="image/png">
   <!-- Fonts -->
@@ -55,7 +54,7 @@ session_start();
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
                   <div class="media-body  ml-2  d-none d-lg-block">
-                    <span class="mb-0 text-sm  font-weight-bold"><?php echo $_SESSION['user'][0][1] ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo $_SESSION['user'][0][1] ?></span>
                   </div>
                 </div>
               </a>
@@ -71,10 +70,7 @@ session_start();
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-5 text-left">
-              <h2 class="text-white">Emissão de Senhas</h2>
-            </div>
-            <div class="col-lg-6 col-5 text-right">
-              <button data-toggle="modal" data-target="#modalSenha" class="btn btn-sm btn-neutral">Novo Lote</button>
+              <h2 class="text-white">Gerenciar Lotes</h2>
             </div>
           </div>
         </div>
@@ -91,20 +87,25 @@ session_start();
                 <th>Data</th>
                 <th>Hora</th>
                 <th>Atrações</th>
-                <th>Qtd. Lotes emitidos</th>
+                <th>Valor do Lote</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
                 <?php
-                  $eventos = new EventoController();
-                  foreach($eventos->listar() as $evento){
+                  $lotes = new LoteController();
+                  foreach($lotes->listarTodos() as $lote){
                 ?>
                 <tr>
-                  <td><?=$evento[1]?></td>
-                  <td><?=date('d/m/Y', strtotime($evento[3]))?></td>
-                  <td><?=$evento[4]?></td>
-                  <td><?=$evento[2]?></td>
-                  <td><?=$evento[6]?></td>
+                  <td><?=$lote[7]?></td>
+                  <td><?=date('d/m/Y', strtotime($lote[9]))?></td>
+                  <td><?=$lote[10]?></td>
+                  <td><?=$lote[2]?></td>
+                  <td>R$ <?=$lote[3]?></td>
+                  <td><?php if($lote[5] == 1){ ?>
+                        <button class="btn btn-sm btn-danger" title="Encerar Lote" onclick="encerrarLote(<?=$lote[0]?>)"><i class="fad fa-ban"></i></button>
+                        <?php }?>
+                </td>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -114,53 +115,6 @@ session_start();
     </div>
   </div>
 
-  <!-- Modal -->
-<div class="modal fade" id="modalSenha" tabindex="0" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Nova Senha</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="controllers/LoteController.php" method="POST">
-      <input type="hidden" name="cadastrar" value="1">
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-12 form-group">
-              <label for="">Evento:</label><br>
-              <select class="form-control" name="evento" id="evento">
-                  <option value="">Selecione...</option>
-                    <?php 
-                        $eventos = new EventoController();
-                        foreach($eventos->listarTodos() as $evento){
-                    ?>
-                    <option value="<?=$evento[0]?>"><?=$evento[1]?></option>
-                    <?php } ?>
-              </select>
-            </div>
-
-            <div class="col-12 form-group">
-              <label for="">Quantidade de Senha:</label><br>
-              <input type="number" name="qtd_senhas" id="" class="form-control" required>
-            </div>
-
-            <div class="col-12 form-group">
-              <label for="">Valor: </label><br>
-              <input type="text" name="valor" id="" class="form-control" required>
-            </div>
-
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-success">Salvar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
   <!-- Argon Scripts -->
   <!-- Core -->
   <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
@@ -190,7 +144,38 @@ session_start();
         "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json"
       }
       } );
-    } );    
+    } );   
+    function encerrarLote(id){
+        Swal.fire({
+            "title": "O lote será encerrado",
+            "text": "Tem certeza que deseja encerrar esse lote, a ação no pode ser desfeita.",
+            "icon": "warning",
+            "confirmButtonText": "Sim",
+            "showCancelButton": true,
+            "cancelButtonText" : "Não"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "controllers/LoteController.php?loteId="+id,
+                    dataType: "json",
+                    success: function(data){
+                        Swal.fire({
+                            "title": "Lote Encerrado",
+                            "text": "O lote foi marcado como encerrado !",
+                            "icon": "success"
+                        });
+                    },
+                    error: function(data){
+                        Swal.fire({
+                            "title": "Lote Encerrado",
+                            "text": "O lote foi marcado como encerrado !",
+                            "icon": "success"
+                        });
+                    }
+                });
+            }
+        });
+    } 
   </script>
 </body>
 

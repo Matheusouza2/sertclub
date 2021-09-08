@@ -3,6 +3,9 @@
 <?php
 require 'controllers/EventoController.php';
 session_start();
+if(!isset($_SESSION['user'])){
+    header("location: index.php");
+}
 ?>
 <head>
   <meta charset="utf-8">
@@ -55,7 +58,7 @@ session_start();
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
                   <div class="media-body  ml-2  d-none d-lg-block">
-                    <span class="mb-0 text-sm  font-weight-bold"><?php echo $_SESSION['user'][0][1] ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo $_SESSION['user'][0][1] ?></span>
                   </div>
                 </div>
               </a>
@@ -71,10 +74,10 @@ session_start();
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-5 text-left">
-              <h2 class="text-white">Emissão de Senhas</h2>
+              <h2 class="text-white">Gestão de Usuários</h2>
             </div>
             <div class="col-lg-6 col-5 text-right">
-              <button data-toggle="modal" data-target="#modalSenha" class="btn btn-sm btn-neutral">Novo Lote</button>
+              <button data-toggle="modal" data-target="#modalSenha" class="btn btn-sm btn-neutral">Novo Usuário</button>
             </div>
           </div>
         </div>
@@ -87,11 +90,9 @@ session_start();
           <table id="myTable" class="table align-items-center table-flush" style="width:100%">
             <thead>
               <tr>
-                <th>Evento</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Atrações</th>
-                <th>Qtd. Lotes emitidos</th>
+                <th>Nome</th>
+                <th>Usuário</th>
+                <th>Nivel de Acesso</th>
               </tr>
             </thead>
             <tbody>
@@ -103,8 +104,6 @@ session_start();
                   <td><?=$evento[1]?></td>
                   <td><?=date('d/m/Y', strtotime($evento[3]))?></td>
                   <td><?=$evento[4]?></td>
-                  <td><?=$evento[2]?></td>
-                  <td><?=$evento[6]?></td>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -119,36 +118,38 @@ session_start();
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Nova Senha</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Novo Usuário</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="controllers/LoteController.php" method="POST">
+      <form action="controllers/UserController.php" method="POST">
       <input type="hidden" name="cadastrar" value="1">
         <div class="modal-body">
           <div class="row">
             <div class="col-12 form-group">
-              <label for="">Evento:</label><br>
-              <select class="form-control" name="evento" id="evento">
+              <label for="">Nível de Acesso:</label><br>
+              <select class="form-control" name="nivel" id="nivel">
                   <option value="">Selecione...</option>
-                    <?php 
-                        $eventos = new EventoController();
-                        foreach($eventos->listarTodos() as $evento){
-                    ?>
-                    <option value="<?=$evento[0]?>"><?=$evento[1]?></option>
-                    <?php } ?>
+                  <option value="2">Administrador</option>
+                  <option value="1">Operador</option>
+                  <option value="0">Portaria</option>
               </select>
             </div>
 
             <div class="col-12 form-group">
-              <label for="">Quantidade de Senha:</label><br>
-              <input type="number" name="qtd_senhas" id="" class="form-control" required>
+              <label for="">Nome:</label><br>
+              <input type="text" name="nome" id="nome" class="form-control" required>
             </div>
 
             <div class="col-12 form-group">
-              <label for="">Valor: </label><br>
-              <input type="text" name="valor" id="" class="form-control" required>
+              <label for="">Usuário: </label><br>
+              <input type="text" name="usuario" id="usuario" class="form-control" readonly>
+            </div>
+
+            <div class="col-12 form-group">
+              <label for="">Senha: </label><br>
+              <input type="text" name="senha" id="" class="form-control" required>
             </div>
 
           </div>
@@ -189,9 +190,18 @@ session_start();
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json"
       }
-      } );
+      });
+      $('#nome').blur(function(){
+          var nome = $('#nome').val();
+          nome = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          usuario = nome.split(" ");
+          if(usuario.length >= 2){
+            $('#usuario').val(usuario[0]+"."+usuario[usuario.length-1]);
+          }else{
+            $('#usuario').val(usuario[0]);
+          }
+      });
     } );    
   </script>
 </body>
-
 </html>
