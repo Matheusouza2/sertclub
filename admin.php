@@ -3,6 +3,9 @@
 <?php
 require 'controllers/EventoController.php';
 session_start();
+if(!isset($_SESSION['user'])){
+    header("location: index.php");
+}
 ?>
 <head>
   <meta charset="utf-8">

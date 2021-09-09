@@ -2,6 +2,10 @@
 <html>
 <?php
 require 'controllers/LoteController.php';
+
+if(!isset($_SESSION['user'])){
+    header("location: index.php");
+}
 ?>
 <head>
   <meta charset="utf-8">

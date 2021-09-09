@@ -24,6 +24,7 @@ $html = "<html lang='pt-br'>
         bottom:290px;
         left:20px;
         font-size: 32pt;
+        font-size: 6vw
       }
       .eventoNameRot{
         color: #fff;
@@ -31,6 +32,7 @@ $html = "<html lang='pt-br'>
         bottom: 280px;
         left:-220px;
         font-size: 24px;
+        font-size: 3.5vw;
       }
       .artistasRot{
         color:#f12b76;
@@ -39,6 +41,7 @@ $html = "<html lang='pt-br'>
         bottom:300px;
         left:-220px;
         font-size: 16pt;
+        font-size: 2.0vw;
       }
       .data{
         color:#fff;
@@ -114,6 +117,15 @@ $html = "<html lang='pt-br'>
         bottom:280px;
         left:20px;
         font-size: 16pt;
+        font-size: 3vw;
+      }
+      .cod-bilhete{
+        color: #fff;
+        position:relative;
+        bottom: 430px;
+        left: 590px;
+        font-size: 11pt;
+        font-weight: bold;
       }
     </style>
 </head>
@@ -130,15 +142,18 @@ foreach($lote->emitirSenhas($_SESSION['loteId']) as $senhas){
       <h4 class='data'>".date('d/m/Y', strtotime($senhas[12]))." ".$senhas[13]."</h4>
       <small class='titleLocal'>LOCAL</small>
       <h4 class='local'>".$senhas[14]."</h4>
-      <h4 class='cod-barras'>".$generator->getBarcode($i, $generator::TYPE_EAN_13)."</h4>
+      <h4 class='cod-barras'>".$generator->getBarcode(str_pad($senhas[2] , 12 , '0' , STR_PAD_LEFT), $generator::TYPE_EAN_13)."</h4>
     
       <div class='canhoto'>
           <h4 class='eventoNameRot'>".$senhas[10]."</h4>
           <pre class='artistasRot'>".$senhas[11]."</pre>
           <h4 class='dataRot'>".date('d/m/Y', strtotime($senhas[12]))." ".$senhas[13]."</h4>
-          <h4 class='localRot'>".$senhas[14]."</h4></div>";
+          <h4 class='localRot'>".$senhas[14]."</h4> 
+          </div>
+          <h4 class='cod-bilhete'>".str_pad($senhas[2] , 12 , '0' , STR_PAD_LEFT)."</h4>";
 }
 
 $html .= "</body></html>";
+unset($_SESSION['loteId']);
 echo $html;
 echo "<script>window.print();</script>";

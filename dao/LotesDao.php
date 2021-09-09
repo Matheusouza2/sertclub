@@ -38,7 +38,7 @@ class LotesDao{
 
         $last = $lastRow->fetch();
         for($i = 0; $i < $last[2]; $i++){
-            $codBarras = uniqid($i);
+            $codBarras = uniqid(rand(10000, 99999999));
             $stmt = $conexao->prepare("INSERT INTO senhas(lote, cod_barras) VALUES (?,?)");
             $stmt->bindParam(1, $last[0]);
             $stmt->bindParam(2, $codBarras);
@@ -78,5 +78,16 @@ class LotesDao{
 
         $stmt = $conexao->prepare($sql);
         $stmt->execute();
+    }
+
+    public function portariaConsulta($cod_barras)
+    {
+        $conexao = Conexao::getInstance();
+
+        $sql = "SELECT * FROM senhas INNER JOIN lotes ON senhas.lote = lotes.id INNER JOIN eventos ON lotes.evento = eventos.id WHERE senhas.cod_barras = ".$cod_barras;
+
+        $row = $conexao->query($sql);
+
+        return $row->fetch();
     }
 }

@@ -6,6 +6,7 @@
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
           <!-- Nav items -->
           <ul class="navbar-nav">
+            <?php if($_SESSION['user'][0]['nivel'] != 0){ ?>
             <li class="nav-item">
               <a class="nav-link" href="admin.php">
                 <i class="fad fa-glass-cheers text-yellow"></i>
@@ -24,18 +25,21 @@
                 <span class="nav-link-text">Gerenciar Lotes</span>
               </a>
             </li>
+            <?php } ?>
             <li class="nav-item">
               <a href="portaria.php" class="nav-link">
                 <i class="fad fa-scanner text-blue"></i>
                 <span class="nav-link-text">Portaria</span>
               </a>
             </li>
+            <?php if($_SESSION['user'][0]['nivel'] == 2){?>
             <li class="nav-item">
               <a class="nav-link" href="usuarios.php">
                 <i class="fad fa-user text-purple"></i>
                 <span class="nav-link-text">Usuários</span>
               </a>
             </li>
+            <?php } ?>
             <li class="nav-item">
               <a class="nav-link" href="controllers/UserController.php?logout=true">
                 <i class="fad fa-sign-out text-danger"></i>

@@ -1,11 +1,13 @@
 <?php
-session_start();
+
+use FontLib\Table\Type\head;
 
 require "../dao/UserDao.php";
 require_once "../models/User.php";
-
+session_start();
 if(isset($_GET['logout'])){
-    unset($_SESSION['user']);
+    session_unset();
+    session_destroy();
     header("location: ../index.php");
 }
 
@@ -48,6 +50,10 @@ class UserController{
         
         if(count($login) == 1){
             $_SESSION['user'] = $login;
+            if($_SESSION['user'][0]['nivel'] == 0){
+                header("location: ../portaria.php");
+                return;
+            }
             header("location: ../admin.php");
             return;
         }

@@ -7,6 +7,8 @@ if(isset($_POST['cadastrar'])){
     LoteController::cadastrar();
 }else if(isset($_GET['loteId'])){
     LoteController::encerrarLote($_GET['loteId']);
+}else if(isset($_GET['cod_barras'])){
+    LoteController::portariaConsulta($_GET['cod_barras']);
 }
 
 class LoteController{
@@ -47,5 +49,12 @@ class LoteController{
         $loteDao->baixarLote($loteId);
 
         echo "Lote Encerrado com sucesso !";
+    }
+
+    public function portariaConsulta($cod_barras)
+    {
+        $loteDao = new LotesDao();
+        $cod = substr($cod_barras, 0, -1);
+        echo json_encode($loteDao->portariaConsulta($cod));
     }
 }
